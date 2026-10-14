@@ -68,12 +68,12 @@ common:
   app_path: ""            # Override the app folder (default: ./app)
 app:
   cleanup: false          # Cleanup VSCodium APPDATA on exit
+  log_level: "debug"      # VSCodium --log level (debug/info/warn/error; default: debug)
 ```
 
 * `common.disable_log: true` — prevents the launcher from writing log files.
-* `common.args` — e.g. `args: ["--disable-gpu"]` to tweak VSCodium startup. Debug logging
-  (`--log debug`) is already appended by the launcher and cannot be removed via config;
-  VSCodium logs are written under `data\logs`.
+* `common.args` — e.g. `args: ["--disable-gpu"]` to tweak VSCodium startup. VSCodium logs are written under `data\logs`.
+* `app.log_level` — controls the `--log` level appended by the launcher (default `debug`); use e.g. `info` to reduce log volume. The appended `--log` argument cannot be removed via config.
 * `app.cleanup: true` — removes leftover VSCodium data under `%APPDATA%\VSCodium`
   when the app exits (useful for shared/guest machines).
 

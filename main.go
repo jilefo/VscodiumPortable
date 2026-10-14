@@ -11,7 +11,8 @@ import (
 )
 
 type config struct {
-	Cleanup bool `yaml:"cleanup" mapstructure:"cleanup"`
+	Cleanup  bool   `yaml:"cleanup" mapstructure:"cleanup"`
+	LogLevel string `yaml:"log_level" mapstructure:"log_level"`
 }
 
 var (
@@ -24,7 +25,8 @@ func init() {
 
 	// Default config
 	cfg = &config{
-		Cleanup: false,
+		Cleanup:  false,
+		LogLevel: "debug",
 	}
 
 	// Init app
@@ -38,13 +40,14 @@ func main() {
 		log.Fatal().Err(err).Msg("Cannot create data directory.")
 	}
 	app.Process = filepath.Join(app.AppPath, "VSCodium.exe")
+	// "--log <level>" forces VSCodium's log level into the portable data\logs
+	// folder (VSCODE_LOGS). The level is read from vscodiumportable.yml
+	// (app.log_level, default "debug" matching the upstream Portapps template).
 	// Hardcoded CLI args are appended after both common.args (vscodiumportable.yml)
-	// and command-line args (see portapps App.Launch), so they cannot be overridden
-	// by the user. "--log debug" forces debug-level logs from VSCodium into the
-	// portable data\logs folder (VSCODE_LOGS): it matches the upstream Portapps
-	// template and helps diagnose issues, but increases log volume.
+	// and command-line args (see portapps App.Launch), so they cannot be
+	// overridden by the user; set app.log_level to e.g. "info" to reduce volume.
 	app.Args = []string{
-		"--log debug",
+		"--log " + cfg.LogLevel,
 	}
 
 	// Cleanup on exit
