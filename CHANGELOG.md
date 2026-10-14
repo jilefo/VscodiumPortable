@@ -1,5 +1,17 @@
 # Changelog
 
+## [Unreleased]
+
+* Add version consistency check script (`scripts/check-version.ps1`) wired into the `prepare` target of `build.xml`
+* Add pull request template (`.github/PULL_REQUEST_TEMPLATE.md`)
+* Add SPDX license headers to `main.go` and platform source files
+* Make launcher log level configurable (`app.log_level`, default `debug`)
+* Add basic unit tests (`main_test.go`)
+* Add manual version bump script (`scripts/update-app.ps1`)
+* Add `THIRD_PARTY_NOTICES.md` with third-party licenses
+* Improve `vscodium.cmd` robustness (CLI entry point check and errorlevel propagation)
+* Add `*.log`, `.DS_Store` and `vscodiumportable.yml` to `.gitignore`
+
 ## 1.140.06880-60 (2026/10/14)
 
 * VSCodium 1.140.06880

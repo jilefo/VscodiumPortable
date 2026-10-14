@@ -21,7 +21,21 @@
     <hashfolder folder="${release.path}"/>
   </target>
 
-  <target name="prepare">
+  <!-- Version consistency check (skip with: ant -Dskip.version.check=true) -->
+  <target name="check-version" unless="skip.version.check">
+    <echo message="Checking version consistency across build.properties / versioninfo.json / portapp.json..."/>
+    <exec executable="powershell" failonerror="true">
+      <arg value="-NoProfile"/>
+      <arg value="-ExecutionPolicy"/>
+      <arg value="Bypass"/>
+      <arg value="-File"/>
+      <arg value="${app.basedir}\scripts\check-version.ps1"/>
+      <arg value="-RepoRoot"/>
+      <arg value="${app.basedir}"/>
+    </exec>
+  </target>
+
+  <target name="prepare" depends="check-version">
     <echo message="Adding vscodium.cmd..."/>
     <copy file="${res.path}\vscodium.cmd" todir="${build.path}" overwrite="true"/>
   </target>

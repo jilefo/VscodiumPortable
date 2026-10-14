@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+// Copyright (c) 2019-2026 CrazyMax
+//
 //go:generate go tool goversioninfo -icon=res/papp.ico -manifest=res/papp.manifest
 package main
 
@@ -15,19 +18,40 @@ type config struct {
 	LogLevel string `yaml:"log_level" mapstructure:"log_level"`
 }
 
+// defaultConfig returns the default launcher configuration.
+func defaultConfig() *config {
+	return &config{
+		Cleanup:  false,
+		LogLevel: "debug",
+	}
+}
+
+// logArg returns the "--log <level>" CLI argument appended to the VSCodium
+// command line to force its log level into the portable data\logs folder
+// (VSCODE_LOGS). The level is read from vscodiumportable.yml (app.log_level,
+// default "debug" matching the upstream Portapps template). Hardcoded CLI args
+// are appended after both common.args (vscodiumportable.yml) and command-line
+// args (see portapps App.Launch), so they cannot be overridden by the user;
+// set app.log_level to e.g. "info" to reduce volume.
+func logArg(level string) string {
+	return "--log " + level
+}
+
 var (
 	app *portapps.App
 	cfg *config
 )
 
-func init() {
+// ensureApp initializes the application once. It is invoked from main so that
+// the package can be linked and unit-tested without side effects.
+func ensureApp() {
+	if app != nil {
+		return
+	}
 	var err error
 
 	// Default config
-	cfg = &config{
-		Cleanup:  false,
-		LogLevel: "debug",
-	}
+	cfg = defaultConfig()
 
 	// Init app
 	if app, err = portapps.NewWithCfg("vscodiumportable", "VSCodium", cfg); err != nil {
@@ -36,6 +60,8 @@ func init() {
 }
 
 func main() {
+	ensureApp()
+
 	if err := os.MkdirAll(app.DataPath, os.ModePerm); err != nil {
 		log.Fatal().Err(err).Msg("Cannot create data directory.")
 	}
@@ -47,7 +73,7 @@ func main() {
 	// and command-line args (see portapps App.Launch), so they cannot be
 	// overridden by the user; set app.log_level to e.g. "info" to reduce volume.
 	app.Args = []string{
-		"--log " + cfg.LogLevel,
+		logArg(cfg.LogLevel),
 	}
 
 	// Cleanup on exit
