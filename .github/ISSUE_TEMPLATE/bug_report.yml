@@ -1,0 +1,65 @@
+# https://docs.github.com/en/communities/using-templates-to-encourage-useful-issues-and-pull-requests/syntax-for-githubs-form-schema
+name: Bug report
+description: Create a report to help us improve
+title: "[Bug] "
+labels:
+  - "bug"
+body:
+  - type: checkboxes
+    attributes:
+      label: Is there an existing issue for this?
+      description: Please search to see if an issue already exists for the bug you encountered.
+      options:
+        - label: I have searched the existing issues
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Description
+      description: A clear and concise description of what the bug is.
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior.
+      placeholder: |
+        1. Go to '...'
+        2. Click on '...'
+        3. Scroll down to '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Release version
+      description: e.g. 1.140.06880-60
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Windows version & architecture
+      description: e.g. Windows 11 23H2, x64
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Launcher log
+      description: Attach or paste the content of `log\vscodiumportable.log` located next to the executable, if available.
+      render: text
+
+  - type: textarea
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here (screenshots, config file content, etc.).

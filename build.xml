@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="vscodium" basedir=".">
+
+  <dirname property="app.basedir" file="${ant.file.vscodium}"/>
+  <property name="build.properties" value="${app.basedir}/build.properties"/>
+  <property file="${build.properties}"/>
+
+  <!-- Load Portapps core build -->
+  <fail unless="core.dir" message="Property 'core.dir' must be defined in build.properties"/>
+  <property name="core.basedir" location="${app.basedir}\${core.dir}"/>
+  <available file="${core.basedir}" type="dir" property="core.present"/>
+  <fail unless="core.present" message="Core directory '${core.basedir}' not found. Check 'core.dir' in build.properties."/>
+  <echo message="Core found in ${core.basedir}" level="debug"/>
+
+  <!-- Import build-app.xml  -->
+  <import file="${core.basedir}\.build\build-app.xml"/>
+
+  <!-- Targets -->
+  <target name="release" depends="release.app" description="Release">
+    <move file="${release.path}\${papp.id}-win64.exe" tofile="${release.path}\VscodiumPortable.exe" overwrite="true"/>
+    <hashfolder folder="${release.path}"/>
+  </target>
+
+  <target name="prepare">
+    <echo message="Adding vscodium.cmd..."/>
+    <copy file="${res.path}\vscodium.cmd" todir="${build.path}" overwrite="true"/>
+  </target>
+
+</project>

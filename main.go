@@ -1,0 +1,65 @@
+//go:generate go tool goversioninfo -icon=res/papp.ico -manifest=res/papp.manifest
+package main
+
+import (
+	"os"
+	"path/filepath"
+
+	"github.com/portapps/portapps/v3"
+	"github.com/portapps/portapps/v3/pkg/files"
+	"github.com/portapps/portapps/v3/pkg/log"
+)
+
+type config struct {
+	Cleanup bool `yaml:"cleanup" mapstructure:"cleanup"`
+}
+
+var (
+	app *portapps.App
+	cfg *config
+)
+
+func init() {
+	var err error
+
+	// Default config
+	cfg = &config{
+		Cleanup: false,
+	}
+
+	// Init app
+	if app, err = portapps.NewWithCfg("vscodiumportable", "VSCodium", cfg); err != nil {
+		log.Fatal().Err(err).Msg("Cannot initialize application. See log file for more info.")
+	}
+}
+
+func main() {
+	if err := os.MkdirAll(app.DataPath, os.ModePerm); err != nil {
+		log.Fatal().Err(err).Msg("Cannot create data directory.")
+	}
+	app.Process = filepath.Join(app.AppPath, "VSCodium.exe")
+	// Hardcoded CLI args are appended after both common.args (vscodiumportable.yml)
+	// and command-line args (see portapps App.Launch), so they cannot be overridden
+	// by the user. "--log debug" forces debug-level logs from VSCodium into the
+	// portable data\logs folder (VSCODE_LOGS): it matches the upstream Portapps
+	// template and helps diagnose issues, but increases log volume.
+	app.Args = []string{
+		"--log debug",
+	}
+
+	// Cleanup on exit
+	if cfg.Cleanup {
+		defer func() {
+			files.Cleanup(filepath.Join(os.Getenv("APPDATA"), "VSCodium"))
+		}()
+	}
+
+	os.Setenv("VSCODE_APPDATA", filepath.Join(app.DataPath, "appdata"))
+	if !app.Config().Common.DisableLog {
+		os.Setenv("VSCODE_LOGS", filepath.Join(app.DataPath, "logs"))
+	}
+	os.Setenv("VSCODE_EXTENSIONS", filepath.Join(app.DataPath, "extensions"))
+
+	defer app.Close()
+	app.Launch(os.Args[1:])
+}

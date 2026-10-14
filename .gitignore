@@ -1,0 +1,19 @@
+# Intellij
+/.idea
+/*.iml
+
+# App
+/.dev
+/bin
+/vendor
+/*.syso
+/*.exe
+
+# Local workspace artifacts
+/temp
+/.merkle-snapshot.json
+/.codeartsdoer
+
+# External source snapshot (not part of project source)
+/vscodium-portable-master.zip
+/vscodium-portable-master/
