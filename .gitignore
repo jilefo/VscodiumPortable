@@ -17,3 +17,8 @@
 # External source snapshot (not part of project source)
 /vscodium-portable-master.zip
 /vscodium-portable-master/
+
+# Logs / OS metadata / user config
+*.log
+.DS_Store
+vscodiumportable.yml

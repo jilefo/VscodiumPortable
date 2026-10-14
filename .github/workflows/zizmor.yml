@@ -1,5 +1,12 @@
 name: zizmor
 
+# Note: the `secrets-outside-env` rule is intentionally disabled by the
+# upstream crazy-max/.github reusable workflow. released.yml legitimately
+# forwards secrets (VT_API_KEY / VT_MONITOR_API_KEY) to reusable workflows
+# via `secrets: inherit` - the supported pattern that never places secret
+# values into command strings, environment values or logs. Keeping the rule
+# disabled avoids false positives for that legitimate usage.
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
