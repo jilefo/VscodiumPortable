@@ -17,6 +17,18 @@
 
   <!-- Targets -->
   <target name="release" depends="release.app" description="Release">
+    <!-- Back up existing release artifacts before overwriting them -->
+    <tstamp>
+      <format property="release.backup.ts" pattern="yyyyMMddHHmmss"/>
+    </tstamp>
+    <mkdir dir="${release.path}\backup\${release.backup.ts}"/>
+    <copy todir="${release.path}\backup\${release.backup.ts}" failonerror="false">
+      <fileset dir="${release.path}">
+        <include name="*.7z"/>
+        <include name="*.exe"/>
+        <include name="checksums.txt"/>
+      </fileset>
+    </copy>
     <move file="${release.path}\${papp.id}-win64.exe" tofile="${release.path}\VscodiumPortable.exe" overwrite="true"/>
     <hashfolder folder="${release.path}"/>
   </target>

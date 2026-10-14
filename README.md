@@ -42,6 +42,28 @@ Grab the latest release from the **GitHub Releases** page:
 
 The `checksums.txt` file in every release provides SHA256 checksums for all artifacts.
 
+## Verify checksums
+
+Every release ships `bin\release\checksums.txt` with the SHA256 digest of the
+`.7z` package and the standalone launcher. Verify downloaded files with
+PowerShell:
+
+```powershell
+Get-FileHash .\vscodiumportable-win64-<version>-<release>.7z -Algorithm SHA256
+Get-FileHash .\VscodiumPortable.exe -Algorithm SHA256
+```
+
+or with `certutil` (Command Prompt):
+
+```bat
+certutil -hashfile vscodiumportable-win64-<version>-<release>.7z SHA256
+certutil -hashfile VscodiumPortable.exe SHA256
+```
+
+Compare the printed hashes with the two lines in `checksums.txt`. The package
+and the launcher have different digests; an exact match means the artifacts
+were not corrupted or tampered with in transit.
+
 ## Quick start
 
 1. Download the `.7z` portable package from the latest release.
@@ -107,7 +129,10 @@ go build -ldflags "-s -w -H=windowsgui" -o bin\tmp\vscodiumportable.exe .
 # 3. Assemble the portable tree
 #    - extract the official VSCodium zip into bin\build\app
 #    - copy the launcher as bin\build\VscodiumPortable.exe
-#    - copy res\vscodium.cmd, README.md, CHANGELOG.md and portapp.json
+#    - copy res\vscodium.cmd, README.md and CHANGELOG.md
+#    - portapp.json is generated into bin\build by the build pipeline
+#      from build.properties; verify consistency with:
+#      powershell -NoProfile -ExecutionPolicy Bypass -File scripts\check-version.ps1 -RepoRoot .
 ```
 
 ## Project structure

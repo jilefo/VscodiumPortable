@@ -17,17 +17,25 @@ func TestDefaultConfig(t *testing.T) {
 func TestLogArg(t *testing.T) {
 	tests := []struct {
 		level string
-		want  string
+		want  []string
 	}{
-		{"debug", "--log debug"},
-		{"info", "--log info"},
-		{"warn", "--log warn"},
-		{"error", "--log error"},
-		{"", "--log "},
+		{"debug", []string{"--log", "debug"}},
+		{"info", []string{"--log", "info"}},
+		{"warn", []string{"--log", "warn"}},
+		{"error", []string{"--log", "error"}},
+		{"", []string{"--log", ""}},
 	}
 	for _, tt := range tests {
-		if got := logArg(tt.level); got != tt.want {
-			t.Errorf("logArg(%q) = %q, want %q", tt.level, got, tt.want)
+		got := logArg(tt.level)
+		if len(got) != len(tt.want) {
+			t.Errorf("logArg(%q) = %v, want %v", tt.level, got, tt.want)
+			continue
+		}
+		for i := range got {
+			if got[i] != tt.want[i] {
+				t.Errorf("logArg(%q) = %v, want %v", tt.level, got, tt.want)
+				break
+			}
 		}
 	}
 }

@@ -69,13 +69,16 @@ $content = $content | ForEach-Object {
     elseif ($line -match "^\s*app\.release\s*=") { "app.release = $newRelease" }
     else { $line }
 }
-Set-Content -LiteralPath $buildProps -Value $content -Encoding UTF8
+# Write without BOM: Set-Content -Encoding UTF8 emits a BOM which breaks
+# Ant Properties parsing of build.properties.
+[System.IO.File]::WriteAllLines($buildProps, $content, (New-Object System.Text.UTF8Encoding($false)))
 
 # --- Update versioninfo.json (ProductVersion = <version>.<release>) ---------
 $viContent = Get-Content -LiteralPath $versionInfo -Raw
 $newProductVersion = "$newVersion.$newRelease"
 $viContent = $viContent -replace '("ProductVersion"\s*:\s*")[^"]*(")', "`${1}$newProductVersion`${2}"
-Set-Content -LiteralPath $versionInfo -Value $viContent -Encoding UTF8
+# Write without BOM (same reason as build.properties above).
+[System.IO.File]::WriteAllText($versionInfo, $viContent, (New-Object System.Text.UTF8Encoding($false)))
 
 # --- Consistency check ------------------------------------------------------
 Write-Host "Running version consistency check..."

@@ -21,6 +21,7 @@ on:
 
 jobs:
   labeler:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     permissions:
       contents: read # same as global permissions

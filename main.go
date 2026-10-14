@@ -26,15 +26,17 @@ func defaultConfig() *config {
 	}
 }
 
-// logArg returns the "--log <level>" CLI argument appended to the VSCodium
-// command line to force its log level into the portable data\logs folder
-// (VSCODE_LOGS). The level is read from vscodiumportable.yml (app.log_level,
-// default "debug" matching the upstream Portapps template). Hardcoded CLI args
-// are appended after both common.args (vscodiumportable.yml) and command-line
-// args (see portapps App.Launch), so they cannot be overridden by the user;
-// set app.log_level to e.g. "info" to reduce volume.
-func logArg(level string) string {
-	return "--log " + level
+// logArg returns the "--log <level>" CLI argument pair appended to the
+// VSCodium command line to force its log level into the portable data\logs
+// folder (VSCODE_LOGS). It returns two separate argv elements so VSCodium's
+// CLI parser reliably consumes the level (a single "--log <level>" token
+// could be mis-split). The level is read from vscodiumportable.yml
+// (app.log_level, default "debug" matching the upstream Portapps template).
+// Hardcoded CLI args are appended after both common.args (vscodiumportable.yml)
+// and command-line args (see portapps App.Launch), so they cannot be
+// overridden by the user; set app.log_level to e.g. "info" to reduce volume.
+func logArg(level string) []string {
+	return []string{"--log", level}
 }
 
 var (
@@ -72,9 +74,7 @@ func main() {
 	// Hardcoded CLI args are appended after both common.args (vscodiumportable.yml)
 	// and command-line args (see portapps App.Launch), so they cannot be
 	// overridden by the user; set app.log_level to e.g. "info" to reduce volume.
-	app.Args = []string{
-		logArg(cfg.LogLevel),
-	}
+	app.Args = logArg(cfg.LogLevel)
 
 	// Cleanup on exit
 	if cfg.Cleanup {
@@ -83,11 +83,17 @@ func main() {
 		}()
 	}
 
-	os.Setenv("VSCODE_APPDATA", filepath.Join(app.DataPath, "appdata"))
-	if !app.Config().Common.DisableLog {
-		os.Setenv("VSCODE_LOGS", filepath.Join(app.DataPath, "logs"))
+	if err := os.Setenv("VSCODE_APPDATA", filepath.Join(app.DataPath, "appdata")); err != nil {
+		log.Fatal().Err(err).Msg("Cannot set VSCODE_APPDATA.")
 	}
-	os.Setenv("VSCODE_EXTENSIONS", filepath.Join(app.DataPath, "extensions"))
+	if !app.Config().Common.DisableLog {
+		if err := os.Setenv("VSCODE_LOGS", filepath.Join(app.DataPath, "logs")); err != nil {
+			log.Fatal().Err(err).Msg("Cannot set VSCODE_LOGS.")
+		}
+	}
+	if err := os.Setenv("VSCODE_EXTENSIONS", filepath.Join(app.DataPath, "extensions")); err != nil {
+		log.Fatal().Err(err).Msg("Cannot set VSCODE_EXTENSIONS.")
+	}
 
 	defer app.Close()
 	app.Launch(os.Args[1:])

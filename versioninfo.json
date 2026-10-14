@@ -2,10 +2,10 @@
   "FixedFileInfo":
   {
     "FileVersion": {
-      "Major": 3,
-      "Minor": 19,
-      "Patch": 0,
-      "Build": 0
+      "Major": 1,
+      "Minor": 140,
+      "Patch": 6880,
+      "Build": 60
     },
     "FileFlagsMask": "3f",
     "FileFlags": "00",
@@ -18,7 +18,7 @@
     "Comments": "",
     "CompanyName": "",
     "FileDescription": "VSCodium portable on Windows by Portapps",
-    "FileVersion": "",
+    "FileVersion": "1.140.06880.60",
     "InternalName": "",
     "LegalCopyright": "https://github.com/portapps/vscodium-portable",
     "LegalTrademarks": "",
