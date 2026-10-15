@@ -13,7 +13,6 @@ on:
 
 jobs:
   virustotal:
-    timeout-minutes: 30
     uses: portapps/.github/.github/workflows/app-virustotal.yml@e5160763f75f635b71a10d8162c004e7f88a1a87 # v1.4.1
     permissions:
       contents: write # required to write GitHub Release body

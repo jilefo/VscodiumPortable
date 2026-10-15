@@ -18,7 +18,6 @@ on:
 
 jobs:
   build:
-    timeout-minutes: 60
     uses: ./.github/workflows/app-build.yml
     permissions:
       contents: write # required to create a GitHub release on push with a tag
