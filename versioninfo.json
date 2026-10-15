@@ -1,6 +1,5 @@
 {
-  "FixedFileInfo":
-  {
+  "FixedFileInfo": {
     "FileVersion": {
       "Major": 1,
       "Minor": 140,
@@ -13,8 +12,7 @@
     "FileType": "01",
     "FileSubType": "00"
   },
-  "StringFileInfo":
-  {
+  "StringFileInfo": {
     "Comments": "",
     "CompanyName": "",
     "FileDescription": "VSCodium portable on Windows by Portapps",
@@ -28,8 +26,7 @@
     "ProductVersion": "1.140.06880.60",
     "SpecialBuild": ""
   },
-  "VarFileInfo":
-  {
+  "VarFileInfo": {
     "Translation": {
       "LangID": "0409",
       "CharsetID": "04B0"
