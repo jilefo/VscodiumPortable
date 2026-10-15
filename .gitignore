@@ -22,3 +22,6 @@
 *.log
 .DS_Store
 vscodiumportable.yml
+
+# Local AI workspace memory (not part of project source)
+/.workbuddy
