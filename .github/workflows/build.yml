@@ -19,6 +19,6 @@ on:
 jobs:
   build:
     timeout-minutes: 60
-    uses: portapps/.github/.github/workflows/app-build.yml@e5160763f75f635b71a10d8162c004e7f88a1a87 # v1.4.1
+    uses: ./.github/workflows/app-build.yml
     permissions:
       contents: write # required to create a GitHub release on push with a tag
