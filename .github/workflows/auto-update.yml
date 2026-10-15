@@ -21,6 +21,12 @@ jobs:
         uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           fetch-depth: 0
+          # Do not persist the built-in GITHUB_TOKEN in the local git config.
+          # checkout writes an http.https://github.com/.extraheader entry that
+          # outranks credentials embedded in a push URL, so every push would be
+          # authenticated as github-actions[bot] (contents: read) and fail 403
+          # instead of using the RELEASE_TOKEN PAT below.
+          persist-credentials: false
 
       - name: Detect latest VSCodium
         id: detect
