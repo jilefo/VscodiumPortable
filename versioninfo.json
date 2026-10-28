@@ -3,8 +3,8 @@
     "FileVersion": {
       "Major": 1,
       "Minor": 143,
-      "Patch": 17183,
-      "Build": 61
+      "Patch": 17232,
+      "Build": 62
     },
     "FileFlagsMask": "3f",
     "FileFlags": "00",
@@ -16,14 +16,14 @@
     "Comments": "",
     "CompanyName": "",
     "FileDescription": "VSCodium portable on Windows by Portapps",
-    "FileVersion": "1.143.17183.61",
+    "FileVersion": "1.143.17232.62",
     "InternalName": "",
     "LegalCopyright": "https://github.com/portapps/vscodium-portable",
     "LegalTrademarks": "",
     "OriginalFilename": "vscodiumportable.exe",
     "PrivateBuild": "",
     "ProductName": "VSCodium Portable",
-    "ProductVersion": "1.143.17183.61",
+    "ProductVersion": "1.143.17232.62",
     "SpecialBuild": ""
   },
   "VarFileInfo": {
